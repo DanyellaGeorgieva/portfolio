@@ -24,25 +24,6 @@ const axesHelper = new THREE.AxesHelper(12);
 scene.add(axesHelper);
 
 /**
- * Lights
- */
-// const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-// scene.add(ambientLight);
-// gui.add(ambientLight, 'intensity').min(0).max(10).step(0.001);
-
-// const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3);
-// scene.add(directionalLight);
-
-const pointLight = new THREE.PointLight(0xfff000, 0.5, 10, 2);
-pointLight.position.x = 2;
-pointLight.position.y = 3;
-pointLight.position.z = 4;
-scene.add(pointLight);
-
-const rectAreaLight = new THREE.RectAreaLight(0x4e00ff, 2, 1, 1);
-scene.add(rectAreaLight);
-
-/**
  * Blob
  */
 // Geometry
@@ -57,15 +38,15 @@ const blobMaterial = new THREE.ShaderMaterial({
 		{
 			diffuse: { type: 'c', value: new THREE.Color(0xff00ff) },
 			uWavesElevation: { value: 10 },
-			uWavesSpeed: { value: 0.14 },
-			uFrequency: { value: 2 },
+			uWavesSpeed: { value: 0.08 },
+			uFrequency: { value: 0.6 },
 			uNoiseStrength: { value: 2.2 },
-			uNoiseDensity: { value: 0.2 },
+			uNoiseDensity: { value: 0.05 },
 			uTime: { value: 0 },
 		},
 	]),
 	// wireframe: true,
-	// transparent: true,
+	transparent: true,
 	lights: true,
 });
 
@@ -111,7 +92,7 @@ const camera = new THREE.PerspectiveCamera(
 	0.1,
 	100
 );
-camera.position.set(1, 1, 8);
+camera.position.set(0, 0, 8);
 scene.add(camera);
 
 // Controls
@@ -127,6 +108,47 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+// Custom global variables
+var mouse = {
+  x: 0,
+  y: 0
+};
+
+let light = new THREE.PointLight(0xffffff);
+  light.position.set(0, 0, 0);
+  scene.add(light);
+
+  // Create a circle around the mouse and move it
+  // The sphere has opacity 0
+  var mouseGeometry = new THREE.SphereGeometry(0.02, 2, 2);
+  var mouseMaterial = new THREE.MeshLambertMaterial({});
+  let mouseMesh = new THREE.Mesh(mouseGeometry, mouseMaterial);
+
+  mouseMesh.position.set(0, 0, 0);
+  scene.add(mouseMesh);
+
+  // When the mouse moves, call the given function
+  document.addEventListener('mousemove', onMouseMove, false);
+
+	function onMouseMove(event) {
+
+		// Update the mouse variable
+		event.preventDefault();
+		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+		mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+	
+		// Make the sphere follow the mouse
+		var vector = new THREE.Vector3(mouse.x, mouse.y, 0.2);
+		vector.unproject(camera);
+		var dir = vector.sub(camera.position).normalize();
+		var distance = -camera.position.z / dir.z;
+		var pos = camera.position.clone().add(dir.multiplyScalar(distance));
+		//mouseMesh.position.copy(pos);
+	
+		light.position.copy(new THREE.Vector3(pos.x, pos.y, pos.z + 1));
+	};
+	
 
 /**
  * Animate

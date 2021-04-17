@@ -10,12 +10,12 @@ struct PointLight {
 uniform PointLight pointLights[NUM_POINT_LIGHTS];
 
 void main() {
-	vec4 addedLights = vec4(0.2, 0.0, 0.5, 0.6);
+	vec4 addedLights = vec4(0.2, 0.0, 0.8, 1.0);
 
-	for(int l = 0; l < NUM_POINT_LIGHTS; l++) {
-		vec3 adjustedLight = pointLights[l].position + cameraPosition;
+	for (int i = 0; i < NUM_POINT_LIGHTS; i++) {
+		vec3 adjustedLight = pointLights[i].position + cameraPosition;
 		vec3 lightDirection = normalize(vPos - adjustedLight);
-		addedLights.rgb += clamp(dot(-lightDirection, vNormal), 0.0, 1.0) * pointLights[l].color;
+		addedLights.rgb -= clamp(dot(-lightDirection, vNormal), 0.04, 0.3) * pointLights[i].color;
 	}
 
 	// gl_FragColor = addedLights;
