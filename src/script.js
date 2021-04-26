@@ -5,60 +5,125 @@ import * as dat from 'dat.gui';
 
 import blobVertexShader from './shaders/blob/blobVertexShader.glsl';
 import blobFragmentShader from './shaders/blob/blobFragmentShader.glsl';
+import common from './shaders/common.glsl';
 
 /**
  * Base
  */
 // Debug
-const gui = new dat.GUI({ width: 340 });
-const debugObject = {};
+// const gui = new dat.GUI({ width: 340 });
+// const debugObject = {};
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
 
 // Scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('hotpink');
+scene.background = new THREE.Color('#f0f8ff');
+
+/**
+ * Lights
+ */
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3);
+directionalLight.angle = 0.63;
+directionalLight.distance = 8.27;
+directionalLight.position.set(-2.20, 2.73, -1.8);
+scene.add(directionalLight);
+
+const light = new THREE.DirectionalLight( 0xffffff, 1, 100 );
+light.angle = 0.1;
+light.distance = 11.27;
+light.position.set(-2.73, -3.73, 5.7);
+scene.add( light );
+
+const light2 = new THREE.DirectionalLight( 0xffffff, 1, 100 );
+light.angle = 0.21;
+light.distance = 1.27;
+light2.position.set(2.73, 1.73, 6.7);
+scene.add( light2 );
+
+//Set up shadow properties for the light
+light.shadow.mapSize.width = 512; // default
+light.shadow.mapSize.height = 512; // default
+light.shadow.camera.near = 0.5; // default
+light.shadow.camera.far = 500;
 
 const axesHelper = new THREE.AxesHelper(12);
-scene.add(axesHelper);
+// scene.add(axesHelper);
 
 /**
  * Blob
  */
 // Geometry
-const blobGeometry = new THREE.SphereGeometry(2, 32, 64);
+const blobGeometry = new THREE.IcosahedronGeometry(1, 164);
 
-// Material
-const blobMaterial = new THREE.ShaderMaterial({
-	vertexShader: blobVertexShader,
-	fragmentShader: blobFragmentShader,
-	uniforms: THREE.UniformsUtils.merge([
-		THREE.UniformsLib['lights'],
-		{
-			diffuse: { type: 'c', value: new THREE.Color(0xff00ff) },
-			uWavesElevation: { value: 10 },
-			uWavesSpeed: { value: 0.08 },
-			uFrequency: { value: 0.6 },
-			uNoiseStrength: { value: 2.2 },
-			uNoiseDensity: { value: 0.05 },
-			uTime: { value: 0 },
-		},
-	]),
-	// wireframe: true,
-	transparent: true,
-	lights: true,
+const textureLoader = new THREE.TextureLoader()
+const gradientTexture = textureLoader.load('/textures/gradients/4.png')
+
+const blobMaterial = new THREE.MeshPhongMaterial({
+	// roughness: 0.0,
+	// metalness: 0.0,
+	map: gradientTexture,
+	shininess: 100,
+	specular: 0xffffff,
+	// blending: THREE.AdditiveBlending
+	// opacity: 0.98,
+	// transparent: true
+	// wireframe: true
+	// color: new THREE.Color('white'),
 });
+
+const customUniforms = {
+	uTime: { value: 0 },
+	uSpeed: { value: 0.2 },
+	uNoiseDensity: { value: 0.6 },
+	uNoiseStrength: { value: 0.8 },
+	uFrequency: { value: 6.0 },
+	uAmplitude: { value: 6.0 },
+};
+
+blobMaterial.onBeforeCompile = (shader) => {
+	console.log(shader);
+
+	shader.uniforms.uTime = customUniforms.uTime;
+	shader.uniforms.uSpeed = customUniforms.uSpeed;
+	shader.uniforms.uNoiseDensity = customUniforms.uNoiseDensity;
+	shader.uniforms.uNoiseStrength = customUniforms.uNoiseStrength;
+	shader.uniforms.uFrequency = customUniforms.uFrequency;
+	shader.uniforms.uAmplitude = customUniforms.uAmplitude;
+
+	shader.vertexShader = shader.vertexShader.replace(
+		'#include <common>',
+		`
+				#include <common>
+				uniform float uTime;
+				uniform float uSpeed;
+				uniform float uNoiseDensity;
+				uniform float uNoiseStrength;
+				uniform float uFrequency;
+				uniform float uAmplitude;
+
+				${common}
+		`
+	);
+
+	shader.vertexShader = shader.vertexShader.replace(
+		'#include <begin_vertex>',
+		`
+		#include <begin_vertex>
+		${blobVertexShader}
+		`
+	);
+};
 
 // Mesh
 const blob = new THREE.Mesh(blobGeometry, blobMaterial);
+blob.castShadow = true;
+blob.receiveShadow = true;
 scene.add(blob);
-
-gui.add(blobMaterial.uniforms.uWavesElevation, 'value').min(0).max(20).step(0.1).name('uWavesElevation');
-gui.add(blobMaterial.uniforms.uWavesSpeed, 'value').min(0).max(1).step(0.001).name('uWavesSpeed');
-gui.add(blobMaterial.uniforms.uFrequency, 'value').min(0).max(10).step(0.001).name('uFrequency');
-gui.add(blobMaterial.uniforms.uNoiseStrength, 'value').min(0).max(10).step(0.001).name('uNoiseStrength');
-gui.add(blobMaterial.uniforms.uNoiseDensity, 'value').min(0).max(1).step(0.001).name('uNoiseDensity');
 
 /**
  * Sizes
@@ -92,7 +157,7 @@ const camera = new THREE.PerspectiveCamera(
 	0.1,
 	100
 );
-camera.position.set(0, 0, 8);
+camera.position.set(2, 2, 1);
 scene.add(camera);
 
 // Controls
@@ -109,46 +174,8 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// Custom global variables
-var mouse = {
-  x: 0,
-  y: 0
-};
-
-let light = new THREE.PointLight(0xffffff);
-  light.position.set(0, 0, 0);
-  scene.add(light);
-
-  // Create a circle around the mouse and move it
-  // The sphere has opacity 0
-  var mouseGeometry = new THREE.SphereGeometry(0.02, 2, 2);
-  var mouseMaterial = new THREE.MeshLambertMaterial({});
-  let mouseMesh = new THREE.Mesh(mouseGeometry, mouseMaterial);
-
-  mouseMesh.position.set(0, 0, 0);
-  scene.add(mouseMesh);
-
-  // When the mouse moves, call the given function
-  document.addEventListener('mousemove', onMouseMove, false);
-
-	function onMouseMove(event) {
-
-		// Update the mouse variable
-		event.preventDefault();
-		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-		mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-	
-		// Make the sphere follow the mouse
-		var vector = new THREE.Vector3(mouse.x, mouse.y, 0.2);
-		vector.unproject(camera);
-		var dir = vector.sub(camera.position).normalize();
-		var distance = -camera.position.z / dir.z;
-		var pos = camera.position.clone().add(dir.multiplyScalar(distance));
-		//mouseMesh.position.copy(pos);
-	
-		light.position.copy(new THREE.Vector3(pos.x, pos.y, pos.z + 1));
-	};
-	
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 /**
  * Animate
@@ -162,7 +189,7 @@ const tick = () => {
 	controls.update();
 
 	// Update shader material
-	blobMaterial.uniforms.uTime.value = elapsedTime;
+	customUniforms.uTime.value = elapsedTime;
 
 	// Render
 	renderer.render(scene, camera);
