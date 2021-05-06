@@ -1,128 +1,121 @@
 import './style.css';
 import * as THREE from 'three';
+import { ShaderChunk } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 
-import blobVertexShader from './shaders/blob/blobVertexShader.glsl';
-import blobFragmentShader from './shaders/blob/blobFragmentShader.glsl';
-import common from './shaders/common.glsl';
+import displacement from './shaders/displacement.glsl';
+import headers from './shaders/headers.glsl';
 
 /**
  * Base
  */
 // Debug
-// const gui = new dat.GUI({ width: 340 });
-// const debugObject = {};
+const gui = new dat.GUI({ width: 340 });
+const debugObject = {};
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
 
 // Scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('#f0f8ff');
+scene.background = new THREE.Color('#0400c9');
 
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+const ambientLight = new THREE.AmbientLight('white', 0.8);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3);
-directionalLight.angle = 0.63;
-directionalLight.distance = 8.27;
-directionalLight.position.set(-2.20, 2.73, -1.8);
+const directionalLight = new THREE.DirectionalLight('hotpink', 0.1);
+directionalLight.angle = 0.6;
+directionalLight.distance = 18.2;
+directionalLight.position.set(2.2, 2.7, 1.8);
+
 scene.add(directionalLight);
-
-const light = new THREE.DirectionalLight( 0xffffff, 1, 100 );
-light.angle = 0.1;
-light.distance = 11.27;
-light.position.set(-2.73, -3.73, 5.7);
-scene.add( light );
-
-const light2 = new THREE.DirectionalLight( 0xffffff, 1, 100 );
-light.angle = 0.21;
-light.distance = 1.27;
-light2.position.set(2.73, 1.73, 6.7);
-scene.add( light2 );
-
-//Set up shadow properties for the light
-light.shadow.mapSize.width = 512; // default
-light.shadow.mapSize.height = 512; // default
-light.shadow.camera.near = 0.5; // default
-light.shadow.camera.far = 500;
-
-const axesHelper = new THREE.AxesHelper(12);
-// scene.add(axesHelper);
 
 /**
  * Blob
  */
 // Geometry
-const blobGeometry = new THREE.IcosahedronGeometry(1, 164);
+const blobGeometry = new THREE.SphereGeometry(1.6, 256, 256);
 
-const textureLoader = new THREE.TextureLoader()
-const gradientTexture = textureLoader.load('/textures/gradients/4.png')
+const textureLoader = new THREE.TextureLoader();
+const gradientTexture = textureLoader.load('Rectangle7.png');
 
-const blobMaterial = new THREE.MeshPhongMaterial({
-	// roughness: 0.0,
-	// metalness: 0.0,
+const blobMaterial = new THREE.MeshPhysicalMaterial({
 	map: gradientTexture,
-	shininess: 100,
-	specular: 0xffffff,
-	// blending: THREE.AdditiveBlending
-	// opacity: 0.98,
-	// transparent: true
-	// wireframe: true
-	// color: new THREE.Color('white'),
+	roughness: 0.1,
+	transparent: true,
+	opacity: 1,
 });
 
 const customUniforms = {
 	uTime: { value: 0 },
-	uSpeed: { value: 0.2 },
-	uNoiseDensity: { value: 0.6 },
-	uNoiseStrength: { value: 0.8 },
-	uFrequency: { value: 6.0 },
-	uAmplitude: { value: 6.0 },
+	uSpeed: { value: 0.3 },
+	uFrequency: { value: 1.2 },
+	uDistort: { value: 0.4 },
+	uFixNormals: { value: true },
 };
 
-blobMaterial.onBeforeCompile = (shader) => {
-	console.log(shader);
+gui
+	.add(customUniforms.uDistort, 'value')
+	.min(0)
+	.max(10)
+	.step(0.01)
+	.name('uDistort');
+gui
+	.add(customUniforms.uSpeed, 'value')
+	.min(0)
+	.max(10)
+	.step(0.01)
+	.name('uSpeed');
+gui
+	.add(customUniforms.uFrequency, 'value')
+	.min(0)
+	.max(10)
+	.step(0.01)
+	.name('uFrequency');
 
+blobMaterial.onBeforeCompile = (shader) => {
 	shader.uniforms.uTime = customUniforms.uTime;
-	shader.uniforms.uSpeed = customUniforms.uSpeed;
-	shader.uniforms.uNoiseDensity = customUniforms.uNoiseDensity;
-	shader.uniforms.uNoiseStrength = customUniforms.uNoiseStrength;
+	shader.uniforms.uDistort = customUniforms.uDistort;
 	shader.uniforms.uFrequency = customUniforms.uFrequency;
-	shader.uniforms.uAmplitude = customUniforms.uAmplitude;
+	shader.uniforms.uSpeed = customUniforms.uSpeed;
+	shader.uniforms.uFixNormals = customUniforms.uFixNormals;
+
+	shader.vertexShader = `
+      ${headers}
+      ${shader.vertexShader}
+    `;
 
 	shader.vertexShader = shader.vertexShader.replace(
-		'#include <common>',
+		'void main() {',
 		`
-				#include <common>
-				uniform float uTime;
-				uniform float uSpeed;
-				uniform float uNoiseDensity;
-				uniform float uNoiseStrength;
-				uniform float uFrequency;
-				uniform float uAmplitude;
-
-				${common}
-		`
+        void main() {
+          ${displacement}
+      `
 	);
 
 	shader.vertexShader = shader.vertexShader.replace(
-		'#include <begin_vertex>',
-		`
-		#include <begin_vertex>
-		${blobVertexShader}
-		`
+		'#include <displacementmap_vertex>',
+		`transformed = displacedPosition;`
+	);
+
+	// fix normals
+	// http://tonfilm.blogspot.com/2007/01/calculate-normals-in-shader.html
+	// https://codepen.io/marco_fugaro/pen/xxZWPWJ?editors=1010
+	shader.vertexShader = shader.vertexShader.replace(
+		'#include <defaultnormal_vertex>',
+		ShaderChunk.defaultnormal_vertex.replace(
+			'vec3 transformedNormal = objectNormal;',
+			`vec3 transformedNormal = displacedNormal;`
+		)
 	);
 };
 
 // Mesh
 const blob = new THREE.Mesh(blobGeometry, blobMaterial);
-blob.castShadow = true;
-blob.receiveShadow = true;
 scene.add(blob);
 
 /**
@@ -157,7 +150,10 @@ const camera = new THREE.PerspectiveCamera(
 	0.1,
 	100
 );
-camera.position.set(2, 2, 1);
+
+camera.position.set(0, 0, 3.8);
+camera.lookAt(scene.position);
+
 scene.add(camera);
 
 // Controls
@@ -174,12 +170,30 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
 /**
  * Animate
  */
+let mouse = {
+	x: 0,
+	y: 0,
+};
+
+let pointLight = new THREE.PointLight('#7ceaff', 6.2, 3.2, 2);
+scene.add(pointLight);
+
+document.addEventListener('mousemove', (event) => {
+	// normalize mouse position
+	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+	const vector = new THREE.Vector3(mouse.x, mouse.y, 0.02);
+	vector.unproject(camera);
+	const dir = vector.sub(camera.position).normalize();
+	const distance = -camera.position.z / dir.z;
+	const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+	pointLight.position.copy(new THREE.Vector3(pos.x, pos.y, pos.z + 2));
+});
+
 const clock = new THREE.Clock();
 
 const tick = () => {
