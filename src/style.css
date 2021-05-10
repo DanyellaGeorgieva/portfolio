@@ -1,19 +1,148 @@
-*
-{
-    margin: 0;
-    padding: 0;
+:root {
+	--main-container-width: 800px;
+	--main-container-height: 460px;
+}
+
+@font-face {
+	font-family: 'Gogh';
+	src: url('../static/Fonts/GoghVariableGX.ttf');
+}
+
+* {
+	margin: 0;
+	padding: 0;
 }
 
 html,
-body
-{
-    overflow: hidden;
+body {
+	overflow: hidden;
+	background-color: #0400c9;
+	font-family: Gogh, sans-serif;
+	width: 100vw;
+	height: 100vh;
 }
 
-.webgl
-{
-    position: fixed;
-    top: 0;
-    left: 0;
-    outline: none;
+.webgl {
+	position: fixed;
+	top: 0;
+	left: 0;
+	outline: none;
+	z-index: 100;
+	transition: transform 1s ease-out;
+}
+
+.main-container {
+	width: var(--main-container-width);
+	height: var(--main-container-height);
+	margin: calc((100vh - var(--main-container-height)) / 2) auto;
+	display: flex;
+	overflow: hidden;
+}
+
+.buttons-container {
+	width: var(--main-container-height);
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	transition: width 1s ease-in;
+}
+
+.gradient {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	transition-property: opacity;
+	transition-duration: 0.4s;
+	z-index: 0;
+}
+
+.button {
+	color: white;
+	font-size: 40px;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	width: 96px;
+	height: 96px;
+	background-color: rgba(0, 0, 0, 0.4);
+	border-radius: 50%;
+	z-index: 200;
+}
+
+.button-projects {
+	align-self: flex-end;
+}
+
+.button-contact {
+	align-self: center;
+}
+
+.gradient-about {
+	opacity: 0;
+	background-image: linear-gradient(
+		to bottom right,
+		#6212e2,
+		rgba(255, 255, 255, 0)
+	);
+}
+
+.gradient-projects {
+	opacity: 0;
+	background-image: linear-gradient(
+		to bottom left,
+		#6212e2,
+		rgba(255, 255, 255, 0)
+	);
+}
+
+.gradient-contact {
+	opacity: 0;
+	background-image: linear-gradient(
+		to top left,
+		#6212e2,
+		rgba(255, 255, 255, 0)
+	);
+}
+
+.button-about:hover ~ .gradient-about,
+.button-projects:hover ~ .gradient-projects,
+.button-contact:hover ~ .gradient-contact {
+	opacity: 1;
+}
+
+.modal {
+	width: 0;
+	height: var(--main-container-height);
+	border-radius: 24px;
+	background-color: white;
+	font-weight: bold;
+	transition: width 1s ease-in;
+	z-index: 300;
+}
+
+.helper {
+	height: var(--main-container-height);
+	width: 0;
+	transition: width 1s ease-in;
+}
+
+.modal.active {
+	width: var(--main-container-height);
+}
+
+.modal-opened .helper {
+	width: 140px;
+}
+
+.modal-opened .buttons-container {
+	width: 96px;
+}
+
+.modal-opened .webgl {
+	transform: scale(1.6) translateX(-30vw);
 }

@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
-</head>
-<body>
-    <canvas class="webgl"></canvas>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Portfolio</title>
+	</head>
+	<body>
+		<canvas class="webgl"></canvas>
+
+		<div class="main-container">
+			<div class="buttons-container">
+				<div class="button button-about">About</div>
+				<div class="gradient gradient-about"></div>
+				<div class="button button-projects">Projects</div>
+				<div class="gradient gradient-projects"></div>
+				<div class="button button-contact">Contact</div>
+				<div class="gradient gradient-contact"></div>
+			</div>
+			<div class="helper"></div>
+			<div class="modal modal-about">
+				<h1>ABOUT</h1>
+				<button class="close-modal">Close</button>
+			</div>
+			<div class="modal modal-projects">
+				<h1>PROJECTS</h1>
+				<button class="close-modal">Close</button>
+			</div>
+			<div class="modal modal-contact">
+				<h1>CONTACT</h1>
+				<button class="close-modal">Close</button>
+			</div>
+		</div>
+	</body>
 </html>

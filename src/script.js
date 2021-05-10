@@ -7,32 +7,25 @@ import * as dat from 'dat.gui';
 import displacement from './shaders/displacement.glsl';
 import headers from './shaders/headers.glsl';
 
+import { toggleModal } from './modal';
+
 /**
  * Base
  */
 // Debug
-const gui = new dat.GUI({ width: 340 });
-const debugObject = {};
+const gui = new dat.GUI({ width: 100 });
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
 
 // Scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('#0400c9');
 
 /**
  * Lights
  */
 const ambientLight = new THREE.AmbientLight('white', 0.8);
 scene.add(ambientLight);
-
-const directionalLight = new THREE.DirectionalLight('hotpink', 0.1);
-directionalLight.angle = 0.6;
-directionalLight.distance = 18.2;
-directionalLight.position.set(2.2, 2.7, 1.8);
-
-scene.add(directionalLight);
 
 /**
  * Blob
@@ -52,30 +45,11 @@ const blobMaterial = new THREE.MeshPhysicalMaterial({
 
 const customUniforms = {
 	uTime: { value: 0 },
-	uSpeed: { value: 0.3 },
-	uFrequency: { value: 1.2 },
-	uDistort: { value: 0.4 },
+	uSpeed: { value: 0.24 },
+	uFrequency: { value: 1.28 },
+	uDistort: { value: 0.48 },
 	uFixNormals: { value: true },
 };
-
-gui
-	.add(customUniforms.uDistort, 'value')
-	.min(0)
-	.max(10)
-	.step(0.01)
-	.name('uDistort');
-gui
-	.add(customUniforms.uSpeed, 'value')
-	.min(0)
-	.max(10)
-	.step(0.01)
-	.name('uSpeed');
-gui
-	.add(customUniforms.uFrequency, 'value')
-	.min(0)
-	.max(10)
-	.step(0.01)
-	.name('uFrequency');
 
 blobMaterial.onBeforeCompile = (shader) => {
 	shader.uniforms.uTime = customUniforms.uTime;
@@ -151,7 +125,7 @@ const camera = new THREE.PerspectiveCamera(
 	100
 );
 
-camera.position.set(0, 0, 3.8);
+camera.position.set(0, 0, 3.6);
 camera.lookAt(scene.position);
 
 scene.add(camera);
@@ -166,8 +140,10 @@ controls.enableDamping = true;
 const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
 	antialias: true,
+	alpha: true,
 });
 renderer.setSize(sizes.width, sizes.height);
+renderer.setClearColor(0xffffff, 0);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 /**
@@ -178,7 +154,7 @@ let mouse = {
 	y: 0,
 };
 
-let pointLight = new THREE.PointLight('#7ceaff', 6.2, 3.2, 2);
+let pointLight = new THREE.PointLight('violet', 5.2, 3.2, 2);
 scene.add(pointLight);
 
 document.addEventListener('mousemove', (event) => {
@@ -199,6 +175,12 @@ const clock = new THREE.Clock();
 const tick = () => {
 	const elapsedTime = clock.getElapsedTime();
 
+	// Update the blob to follow the mouse
+	blob.rotation.x = -Math.sin(mouse.y) * Math.PI * 0.1 - 1;
+	blob.rotation.y = Math.sin(mouse.x) * Math.PI * 0.1 - 1;
+
+
+
 	// Update controls
 	controls.update();
 
@@ -213,3 +195,20 @@ const tick = () => {
 };
 
 tick();
+
+// DOM interactions
+const aboutButton = document.querySelector('.button-about');
+const projectsButton = document.querySelector('.button-projects');
+const contactButton = document.querySelector('.button-contact');
+
+aboutButton.addEventListener('click', () => {
+	toggleModal('modal-about');
+});
+
+projectsButton.addEventListener('click', () => {
+	toggleModal('modal-projects');
+});
+
+contactButton.addEventListener('click', () => {
+	toggleModal('modal-contact');
+});
