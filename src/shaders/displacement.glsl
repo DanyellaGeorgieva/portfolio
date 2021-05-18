@@ -1,11 +1,10 @@
-
 vec3 displacedPosition = position + normalize(normal) * turbulence(position);
 vec3 displacedNormal = normalize(normal);
 
 // gen new normals
 // https://discourse.threejs.org/t/calculating-vertex-normals-after-displacement-in-the-vertex-shader/16989
 if (uFixNormals == 1.0) {
-    float offset = .5 / 512.;
+    float offset = 0.5 / 512.0;
     vec3 tangent = orthogonal(normal);
     vec3 bitangent = normalize(cross(normal, tangent));
     vec3 neighbour1 = position + tangent * offset;

@@ -1,5 +1,6 @@
-// GLSL textureless classic 3D noise \"cnoise\",
-// with an RSL-style periodic variant \"pnoise\".
+//
+// GLSL textureless classic 3D noise "cnoise",
+// with an RSL-style periodic variant "pnoise".
 // Author:  Stefan Gustavson (stefan.gustavson@liu.se)
 // Version: 2011-10-11
 //
@@ -31,12 +32,11 @@ vec3 fade(vec3 t) {
   return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 }
 
-// Classic Perlin noise, periodic variant
-float pnoise(vec3 P, vec3 rep) {
-  vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period
-  vec3 Pi1 = mod(Pi0 + vec3(1.0), rep); // Integer part + 1, mod period
-  Pi0 = mod289(Pi0);
-  Pi1 = mod289(Pi1);
+float cnoise(vec3 P) {
+  vec3 Pi0 = floor(P); // Integer part for indexing
+  vec3 Pi1 = Pi0 + vec3(1.0); // Integer part + 1
+  Pi0 = mod(Pi0, 289.0);
+  Pi1 = mod(Pi1, 289.0);
   vec3 Pf0 = fract(P); // Fractional part for interpolation
   vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0
   vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
@@ -48,16 +48,16 @@ float pnoise(vec3 P, vec3 rep) {
   vec4 ixy0 = permute(ixy + iz0);
   vec4 ixy1 = permute(ixy + iz1);
 
-  vec4 gx0 = ixy0 * (1.0 / 7.0);
-  vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;
+  vec4 gx0 = ixy0 / 7.0;
+  vec4 gy0 = fract(floor(gx0) / 7.0) - 0.5;
   gx0 = fract(gx0);
   vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);
   vec4 sz0 = step(gz0, vec4(0.0));
   gx0 -= sz0 * (step(0.0, gx0) - 0.5);
   gy0 -= sz0 * (step(0.0, gy0) - 0.5);
 
-  vec4 gx1 = ixy1 * (1.0 / 7.0);
-  vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;
+  vec4 gx1 = ixy1 / 7.0;
+  vec4 gy1 = fract(floor(gx1) / 7.0) - 0.5;
   gx1 = fract(gx1);
   vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);
   vec4 sz1 = step(gz1, vec4(0.0));
@@ -101,41 +101,13 @@ float pnoise(vec3 P, vec3 rep) {
 }
 
 uniform float uTime;
-uniform float uRadius;
 uniform float uDistort;
 uniform float uFrequency;
 uniform float uSpeed;
-uniform float uSurfaceDistort;
-uniform float uSurfaceFrequency;
-uniform float uSurfaceTime;
-uniform float uNumberOfWaves;
 uniform float uFixNormals;
-uniform float uSurfacePoleAmount;
-uniform float uGooPoleAmount;
-
-#define M_PI 3.1415926538
-#define NOISE_PERIOD 1. // avoid noise artifacts after long duration
-
-// float f(vec3 point) {
-
-//     float yPos = smoothstep(-1., 1., point.y);
-//     float amount = sin(yPos * M_PI);
-//     float wavePoleAmount = mix(amount * 1.0, 1.0, uSurfacePoleAmount);
-//     float uGooPoleAmount = mix(amount * 1.0, 1.0, uGooPoleAmount);
-
-//     // blob noise
-//     float goo = pnoise(vec3(point / (uFrequency) + mod(uTime, NOISE_PERIOD)), vec3(NOISE_PERIOD)) * pow(uDistort, 2.0);
-
-//     // wave noise
-//     float surfaceNoise = pnoise(vec3(point / (uSurfaceFrequency) + mod(uSurfaceTime, NOISE_PERIOD)), vec3(NOISE_PERIOD));
-//     float waves = (point.x * sin((point.y+surfaceNoise)*M_PI*uNumberOfWaves) + point.z * cos((point.y+surfaceNoise)*M_PI*uNumberOfWaves)) * 0.01 * pow(uSurfaceDistort, 2.0);
-
-//     // combined noise
-//     return waves * wavePoleAmount + goo * uGooPoleAmount;
-// }
 
 float turbulence(vec3 point) {
-  return pnoise((point + uTime * uSpeed) * uFrequency, vec3(10.0)) * uDistort;
+  return cnoise((point + uTime * uSpeed) * uFrequency) * uDistort;
 }
 
 vec3 orthogonal(vec3 v) {

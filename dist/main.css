@@ -16,6 +16,7 @@
 	--card-font-size: 1.1458333333333333vw; /* 22px */
 
 	--main-color: #ffcdd2;
+	/* --main-color: #EB5550; */
 
 	--accent-color: #ff2138;
 	--link: #e20f25;
@@ -24,7 +25,7 @@
 
 @font-face {
 	font-family: 'Museo';
-	src: url('../static/Fonts/MuseoModerno-VariableFont_wght.ttf');
+	src: url(assets/fonts/14e85e645e716b4f0ed2f6d6eec38688.ttf);
 }
 
 * {
@@ -62,8 +63,6 @@ body {
 	height: var(--main-container-height);
 	margin: calc((100vh - var(--main-container-height)) / 2) auto;
 	overflow: hidden;
-
-	/* clip-path: inset(0 100% 0 0); */
 }
 
 nav {
@@ -89,7 +88,7 @@ nav {
 }
 
 .nav-button::after {
-	content: url(../static/vec.svg);
+	content: url(assets/images/0cdabe8ee0014f5e8050d837e5e89eaa.svg);
 	position: absolute;
 	top: -1.86vw;
 	left: 0;
@@ -138,7 +137,7 @@ nav {
 
 .modal-header-line {
 	flex-grow: 1;
-	background-image: url(../static/vector-repeat.svg);
+	background-image: url(assets/images/e255b73eaeb34f19dff39a2f17fafa56.svg);
   background-size: contain;
 	background-repeat: repeat-x;
 	height: 1.5vw;
@@ -267,3 +266,6 @@ nav {
 	cursor: pointer;
 }
 
+
+
+/*# sourceMappingURL=main.css.map*/

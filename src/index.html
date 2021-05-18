@@ -7,28 +7,90 @@
 	</head>
 	<body>
 		<canvas class="webgl"></canvas>
-
 		<div class="main-container">
-			<div class="buttons-container">
-				<div class="button button-about">About</div>
-				<div class="gradient gradient-about"></div>
-				<div class="button button-projects">Projects</div>
-				<div class="gradient gradient-projects"></div>
-				<div class="button button-contact">Contact</div>
-				<div class="gradient gradient-contact"></div>
-			</div>
-			<div class="helper"></div>
-			<div class="modal modal-about">
-				<h1>ABOUT</h1>
-				<button class="close-modal">Close</button>
-			</div>
-			<div class="modal modal-projects">
-				<h1>PROJECTS</h1>
-				<button class="close-modal">Close</button>
-			</div>
-			<div class="modal modal-contact">
-				<h1>CONTACT</h1>
-				<button class="close-modal">Close</button>
+			<nav>
+				<div class="nav-button nav-button-about" data-type="about">about</div>
+				<div class="nav-button nav-button-projects" data-type="projects">work</div>
+				<div class="nav-button nav-button-contact" data-type="contact">contact</div>
+			</nav>
+				<div class="modal modal-about">
+					<div class="modal-header">
+						<div class="modal-header-text">Why, hello there!</div>
+						<div class="modal-header-line"></div>
+						<div class="modal-close-button">
+							<svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<rect x="22.627" y="5.65674" width="8" height="24" rx="4" transform="rotate(45 22.627 5.65674)" fill="white"/>
+								<rect x="28.2852" y="22.6274" width="8" height="24" rx="4" transform="rotate(135 28.2852 22.6274)" fill="white"/>
+							</svg>
+						</div>
+					</div>
+					<div class="modal-about-card">
+						<p><strong>My name is Daniela.</strong></p>
+						<p>I am an architect turned fornt-end developer. I have keen interest in WebGL experiments and UI animations.</p>
+						<p><strong>I’m currently looking for my next adventure as a full-time creative developer.</strong></p>
+						<span class="link">GET THE CV</span>
+					</div>
+					<div class="modal-about-photo"></div>
+				</div>
+				<div class="modal modal-projects">
+					<div class="modal-header">
+						<div class="modal-header-text">Recent projects</div>
+						<div class="modal-header-line"></div>
+						<div class="modal-close-button">
+							<svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<rect x="22.627" y="5.65674" width="8" height="24" rx="4" transform="rotate(45 22.627 5.65674)" fill="white"/>
+								<rect x="28.2852" y="22.6274" width="8" height="24" rx="4" transform="rotate(135 28.2852 22.6274)" fill="white"/>
+							</svg>
+						</div>
+					</div>
+					<div class="modal-projects-cards-container">
+						<div class="modal-projects-cards-scroll">
+							<div class="modal-projects-card">
+								<div class="modal-projects-card-title">Sintez Podcast Studio</div>
+								<div class="modal-projects-card-image"></div>
+								<p>Interactive 3d Mic built with Three.js and WebGL Shaders</p>
+								<div class="modal-projects-card-site link">VISIT SITE</div>
+							</div>
+							<div class="modal-projects-card">
+								<div class="modal-projects-card-title">Garet Font Motion</div>
+								<div class="modal-projects-card-image"></div>
+								<p>CSS Animation project using a variable font for Spacetype foundry</p>
+								<div class="modal-projects-card-site link">VISIT SITE</div>
+							</div>
+							<div class="modal-projects-card">
+								<div class="modal-projects-card-title">Another project</div>
+								<div class="modal-projects-card-image"></div>
+								<p>Coming soon</p>
+								<div class="modal-projects-card-site link">VISIT SITE</div>
+							</div>
+							<div class="modal-projects-card">
+								<div class="modal-projects-card-title">Another project</div>
+								<div class="modal-projects-card-image"></div>
+								<p>Coming soon</p>
+								<div class="modal-projects-card-site link">VISIT SITE</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal modal-contact">
+					<div class="modal-header">
+						<div class="modal-header-text">Get in touch</div>
+						<div class="modal-header-line"></div>
+						<div class="modal-close-button">
+							<svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<rect x="22.627" y="5.65674" width="8" height="24" rx="4" transform="rotate(45 22.627 5.65674)" fill="white"/>
+								<rect x="28.2852" y="22.6274" width="8" height="24" rx="4" transform="rotate(135 28.2852 22.6274)" fill="white"/>
+							</svg>
+						</div>
+					</div>
+					<div class="modal-contact-card">
+						<p><strong>Feel free to say hi!</strong></p>
+						<p>Omnis qui quisquam ea velit consequatur voluptas quia iste. Voluptas voluptatem velit sit vel et.</p>
+						<a target="_blank" href="mailto:danyellageorgieva@gmail.com">danyellageorgieva@gmail.com</a>
+						<a target="_blank" href="https://www.instagram.com/danyella.xyz/">@danyella.xyz</а>
+						<a target="_blank" href="https://codepen.io/DannaG">@dannah</а>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

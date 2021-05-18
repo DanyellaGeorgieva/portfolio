@@ -13,7 +13,7 @@ import { toggleModal } from './modal';
  * Base
  */
 // Debug
-const gui = new dat.GUI({ width: 100 });
+const gui = new dat.GUI({ width: 340 });
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
@@ -31,14 +31,28 @@ scene.add(ambientLight);
  * Blob
  */
 // Geometry
-const blobGeometry = new THREE.SphereGeometry(1.6, 256, 256);
+const blobGeometry = new THREE.SphereGeometry(1.6, 356, 356);
 
 const textureLoader = new THREE.TextureLoader();
-const gradientTexture = textureLoader.load('Rectangle7.png');
+const gradientTexture = textureLoader.load('gradients/background.png');
+
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+
+const environmentMapTexture = cubeTextureLoader.load([
+	'/environmentMaps/0/px.jpg',
+	'/environmentMaps/0/nx.jpg',
+	'/environmentMaps/0/py.jpg',
+	'/environmentMaps/0/ny.jpg',
+	'/environmentMaps/0/pz.jpg',
+	'/environmentMaps/0/nz.jpg',
+]);
 
 const blobMaterial = new THREE.MeshPhysicalMaterial({
 	map: gradientTexture,
+	color: new THREE.Color(),
+	envMap: environmentMapTexture,
 	roughness: 0.1,
+	metalness: 0.0,
 	transparent: true,
 	opacity: 1,
 });
@@ -46,12 +60,27 @@ const blobMaterial = new THREE.MeshPhysicalMaterial({
 const customUniforms = {
 	uTime: { value: 0 },
 	uSpeed: { value: 0.24 },
-	uFrequency: { value: 1.28 },
-	uDistort: { value: 0.48 },
+	uFrequency: { value: 3 },
+	uDistort: { value: 0.54 },
 	uFixNormals: { value: true },
 };
 
+gui
+	.add(customUniforms.uFrequency, 'value')
+	.min(0)
+	.max(10)
+	.step(1)
+	.name('uFrequency');
+gui
+	.add(customUniforms.uDistort, 'value')
+	.min(0)
+	.max(1)
+	.step(0.001)
+	.name('uDistort');
+
 blobMaterial.onBeforeCompile = (shader) => {
+
+	console.log(shader);
 	shader.uniforms.uTime = customUniforms.uTime;
 	shader.uniforms.uDistort = customUniforms.uDistort;
 	shader.uniforms.uFrequency = customUniforms.uFrequency;
@@ -90,6 +119,9 @@ blobMaterial.onBeforeCompile = (shader) => {
 
 // Mesh
 const blob = new THREE.Mesh(blobGeometry, blobMaterial);
+blob.rotation.z = 5.2;
+blob.rotation.x = 4.2;
+blob.rotation.y = 1.4;
 scene.add(blob);
 
 /**
@@ -154,7 +186,7 @@ let mouse = {
 	y: 0,
 };
 
-let pointLight = new THREE.PointLight('violet', 5.2, 3.2, 2);
+let pointLight = new THREE.PointLight('white', 2.6, 1.86, 2);
 scene.add(pointLight);
 
 document.addEventListener('mousemove', (event) => {
@@ -179,8 +211,6 @@ const tick = () => {
 	blob.rotation.x = -Math.sin(mouse.y) * Math.PI * 0.1 - 1;
 	blob.rotation.y = Math.sin(mouse.x) * Math.PI * 0.1 - 1;
 
-
-
 	// Update controls
 	controls.update();
 
@@ -197,18 +227,12 @@ const tick = () => {
 tick();
 
 // DOM interactions
-const aboutButton = document.querySelector('.button-about');
-const projectsButton = document.querySelector('.button-projects');
-const contactButton = document.querySelector('.button-contact');
+const buttons = document.querySelectorAll('.nav-button');
 
-aboutButton.addEventListener('click', () => {
-	toggleModal('modal-about');
-});
+for (let button of buttons) {
+	let typeOfBtn = button.getAttribute('data-type');
 
-projectsButton.addEventListener('click', () => {
-	toggleModal('modal-projects');
-});
-
-contactButton.addEventListener('click', () => {
-	toggleModal('modal-contact');
-});
+	button.addEventListener('click', () => {
+		toggleModal(`modal-${typeOfBtn}`);
+	});
+}
