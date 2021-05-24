@@ -31,10 +31,10 @@ scene.add(ambientLight);
  * Blob
  */
 // Geometry
-const blobGeometry = new THREE.SphereGeometry(1.6, 356, 356);
+const blobGeometry = new THREE.SphereBufferGeometry(1.6, 256, 256);
 
 const textureLoader = new THREE.TextureLoader();
-const gradientTexture = textureLoader.load('gradients/background.png');
+const gradientTexture = textureLoader.load('gradients/test2.png');
 
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 
@@ -49,19 +49,19 @@ const environmentMapTexture = cubeTextureLoader.load([
 
 const blobMaterial = new THREE.MeshPhysicalMaterial({
 	map: gradientTexture,
-	color: new THREE.Color(),
 	envMap: environmentMapTexture,
 	roughness: 0.1,
-	metalness: 0.0,
+	metalness: 0.1,
 	transparent: true,
 	opacity: 1,
+	// clearcoat: 1,
 });
 
 const customUniforms = {
 	uTime: { value: 0 },
 	uSpeed: { value: 0.24 },
-	uFrequency: { value: 3 },
-	uDistort: { value: 0.54 },
+	uFrequency: { value: 3.2 },
+	uDistort: { value: 0.1 },
 	uFixNormals: { value: true },
 };
 
@@ -119,9 +119,10 @@ blobMaterial.onBeforeCompile = (shader) => {
 
 // Mesh
 const blob = new THREE.Mesh(blobGeometry, blobMaterial);
-blob.rotation.z = 5.2;
 blob.rotation.x = 4.2;
 blob.rotation.y = 1.4;
+blob.rotation.z = 5.2;
+
 scene.add(blob);
 
 /**
@@ -178,6 +179,10 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.setClearColor(0xffffff, 0);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+// const fog = new THREE.Fog('lightblue', 0.8, 10);
+// // renderer.setClearColor('lightblue');
+// scene.fog = fog;
+
 /**
  * Animate
  */
@@ -186,7 +191,7 @@ let mouse = {
 	y: 0,
 };
 
-let pointLight = new THREE.PointLight('white', 2.6, 1.86, 2);
+let pointLight = new THREE.PointLight('lightblue', 2.6, 1.82, 2);
 scene.add(pointLight);
 
 document.addEventListener('mousemove', (event) => {
@@ -236,3 +241,11 @@ for (let button of buttons) {
 		toggleModal(`modal-${typeOfBtn}`);
 	});
 }
+
+// Horizontal Scrolling
+const scrollContainer = document.querySelector('.modal-projects-cards-container')
+scrollContainer.addEventListener('wheel', function(e) {
+
+  if (e.deltaY > 0) scrollContainer.scrollLeft += 120;
+  else scrollContainer.scrollLeft -= 120;
+});

@@ -15,12 +15,14 @@
 	--header-font-size: 3.3854166666666665vw; /* 65px */
 	--card-font-size: 1.1458333333333333vw; /* 22px */
 
-	--main-color: #ffcdd2;
-	/* --main-color: #EB5550; */
+	/* --main-color: #FFFCE6; */
+	--main-color: #efefef;
+
 
 	--accent-color: #ff2138;
+
 	--link: #e20f25;
-	--secondary-color: #003300;
+	--secondary-color: #00045C;
 }
 
 @font-face {
@@ -42,10 +44,11 @@ body {
 	width: 100vw;
 	height: 100vh;
 
-	background-image: radial-gradient(#ffe7e9 0.1vw, transparent 0),
-										radial-gradient(#ffe7e9 0.1vw, transparent 0);
+	/* background-image: radial-gradient(#a2daff 0.1vw, transparent 0),
+										radial-gradient(#cfe8ff 0.1vw, transparent 0);
 	background-size: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
-	background-position: 0 0, var(--spacing) var(--spacing);
+	background-position: 0 0, var(--spacing) var(--spacing); */
+
 }
 
 .webgl {
@@ -82,13 +85,12 @@ nav {
 	line-height: 4vw;
 	font-variation-settings: 'wght' 600;
 	color: var(--accent-color);
-	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
-	cursor: pointer;
 	box-shadow: 0 0.72vw 1.14vw rgba(0, 0, 0, 0.2);
+	position: relative;
 }
 
 .nav-button::after {
-	content: url(assets/images/0cdabe8ee0014f5e8050d837e5e89eaa.svg);
+	content: url(assets/images/aefeebf48ef04091372c347fe0077b92.svg);
 	position: absolute;
 	top: -1.86vw;
 	left: 0;
@@ -97,26 +99,34 @@ nav {
 }
 
 .nav-button-about {
-	transform: translateX(8vw);
+	left: 8vw;
+	transform: translateX(0);
 	border-radius: var(--border-radius) var(--border-radius) 0 var(--border-radius);
+	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
 }
 
 .nav-button-projects {
-	transform: translateX(46vw);
+	left: 46vw;
+	transform: translateX(0);
 	border-radius: var(--border-radius) var(--border-radius) var(--border-radius) 0;
+	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
 }
 
 .nav-button-contact {
-	transform: translateX(16vw);
+	left: 14vw;
+	transform: translateX(0);
 	border-radius: var(--border-radius) var(--border-radius) 0 var(--border-radius);
+	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
 }
 
 .modal {
 	position: absolute;
 	top: 0;
+	left: var(--main-container-width);
+	
 	height: var(--main-container-height);
 	width: var(--modal-width);
-	transform: translateX(var(--main-container-width));
+	transform: translateX(0);
 	transition: transform 0.8s ease-out;
 
 	font-size: var(--card-font-size);
@@ -137,7 +147,7 @@ nav {
 
 .modal-header-line {
 	flex-grow: 1;
-	background-image: url(assets/images/e255b73eaeb34f19dff39a2f17fafa56.svg);
+	background-image: url(assets/images/36f6a97eb51f91044a885d20a2b96559.svg);
   background-size: contain;
 	background-repeat: repeat-x;
 	height: 1.5vw;
@@ -161,13 +171,20 @@ nav {
 }
 
 .modal.active {
-	transform: translateX(calc(var(--modal-column-width) + var(--spacing)));
+	transform: translateX(calc(var(--modal-column-width) + var(--spacing) - var(--main-container-width)));
 }
 
-.modal-opened .nav-button-about,
-.modal-opened .nav-button-projects,
+.modal-opened .nav-button-about {
+	transform: translateX(-8vw);
+	border-radius: var(--border-radius);
+}
+
+.modal-opened .nav-button-projects {
+	transform: translateX(-46vw);
+	border-radius: var(--border-radius);
+}
 .modal-opened .nav-button-contact {
-	transform: translateX(0);
+	transform: translateX(-14vw);
 	border-radius: var(--border-radius);
 }
 
@@ -222,6 +239,10 @@ nav {
 	display: inline-block;
 }
 
+.modal-projects-card > .link {
+	text-align: center;
+}
+
 .modal-projects-card-title {
 	width: 50%;
 	font-variation-settings: 'wght' 560;
@@ -241,7 +262,7 @@ nav {
 	display: inline-block; */
 }
 
-.modal-projects-card-site {
+a.modal-projects-card-site.link {
 	margin-top: var(--spacing);
 	text-align: center;
 }
@@ -258,8 +279,18 @@ nav {
 	margin-bottom: var(--spacing);
 }
 
-.link, a {
-	width: fit-content;
+.card-contact {
+	display: flex;
+	align-items: center;
+}
+
+.card-contact svg {
+	width: 2vw;
+	margin-right: 0.8vw;
+	fill: var(--link);
+}
+
+.link {
 	color: var(--link);
 	font-variation-settings: 'wght' 560;
 	text-decoration: #ffabb4 wavy underline;
