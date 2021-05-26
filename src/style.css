@@ -1,32 +1,48 @@
-:root {
+body {
 	--main-container-width: 63.33333333333333vw; /* 1216px */
 	--main-container-height: 37.5vw; /* 720px */
 
 	--nav-button-width: 11.4vw; /* 228px */
-	--nav-button-font: 2.864583333333333vw; /* 55px */
+	--nav-button-font: 2.5vw; /* 48px */
 
 	--modal-width: 46.25vw; /* 888px */
 	--modal-column-width: 14.583333333333334vw; /* 280px */
 	--modal-close-button-size: 2.5vw;
 
-	--border-radius: 1.6666666666666667vw; /* 32px */
+	--border-radius: 1.25vw; /* 24px */
 	--spacing: 1.6666666666666667vw; /* 32px */
 
 	--header-font-size: 3.3854166666666665vw; /* 65px */
-	--card-font-size: 1.1458333333333333vw; /* 22px */
+	--card-font-size: 1.25vw; /* 24px */
 
-	--background: radial-gradient(circle at center, white 10%, #ccf7f4, #7bb5e6);
-	--accent-color: #ff3f62;
+	--background-chill: radial-gradient(
+		circle at center,
+		#f1eaf6 10%,
+		#ccf7f4,
+		#7bb5e6
+	);
+	--background-hyped: radial-gradient(
+		circle at center,
+		#f1eaf6 40%,
+		#ccf7f4,
+		#b29bc7
+	);
+	--accent-color: #3db3e9;
 
-	--link: #ff3056;
-	--secondary-color: #1a1a1a;
+	--link: #2d82aa;
+	--text-color: #1a1a1a;
 
-	--shadow: 0vw 0.84vw 0.8vw rgba(0, 0, 0, 0.32);
+	--shadow: 0px 0.4166666666666667vw 0.625vw rgba(0, 0, 0, 0.08);
 }
 
 @font-face {
-	font-family: 'Museo';
-	src: url('../static/Fonts/GoghVariableGX.ttf');
+	font-family: 'Raleway-Italic';
+	src: url('../static/Fonts/Raleway-Italic-VariableFont_wght.ttf');
+}
+
+@font-face {
+	font-family: 'Raleway';
+	src: url('../static/Fonts/Raleway-VariableFont_wght.ttf');
 }
 
 * {
@@ -38,10 +54,43 @@
 html,
 body {
 	overflow: hidden;
-	background-image: var(--background);
-	font-family: Museo, sans-serif;
+
+	font-family: Raleway, sans-serif;
 	width: 100vw;
 	height: 100vh;
+}
+
+body.hyped {
+	--accent-color: #2cffae;
+
+	--link: #189b7a;
+}
+
+.background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	transition: opacity 0.6s ease-out;
+}
+
+.background-chill {
+	background-image: var(--background-chill);
+	opacity: 1;
+}
+
+.background-hyped {
+	background-image: var(--background-hyped);
+	opacity: 0;
+}
+
+.hyped .background-chill {
+	opacity: 0;
+}
+
+.hyped .background-hyped {
+	opacity: 1;
 }
 
 .webgl {
@@ -51,6 +100,57 @@ body {
 	outline: none;
 
 	transition: transform 0.6s ease-out, filter 0.6s ease-out;
+}
+
+.theme-switcher-container {
+	position: absolute;
+	left: 50%;
+	top: var(--spacing);
+	transform: translate(-50%, 0);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	font-size: calc(var(--card-font-size) * 1.2);
+	font-variation-settings: 'wght' 720;
+	color: var(--text-color);
+	user-select: none;
+}
+
+input[type='checkbox'] {
+	visibility: hidden;
+	position: absolute;
+}
+
+.switch {
+	margin: 0 calc(var(--spacing) / 2);
+}
+
+.switcher {
+	background-color: #c1c1c1;
+	border-radius: var(--border-radius);
+
+	width: calc(var(--spacing) * 2);
+	height: 0.72vw;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.switcher:before {
+	content: '';
+	width: var(--spacing);
+	height: var(--spacing);
+
+	border-radius: 50%;
+	background-color: var(--accent-color);
+
+	transition: transform 0.2s ease-in, background-color 0.2s ease-out;
+	box-shadow: inset 4px 2px rgba(255, 255, 255, 0.42), var(--shadow);
+}
+
+input[type='checkbox']:checked + .switcher:before {
+	transform: translate(var(--spacing), 0);
 }
 
 .main-container {
@@ -72,63 +172,82 @@ nav {
 
 .nav-button {
 	width: fit-content;
-	padding: 0 var(--spacing) 0.3125vw var(--spacing);
+	width: -moz-fit-content;
+	height: 4.166666666666666vw;
+	padding: 0 calc(var(--spacing) / 1.2);
 	background-color: rgba(255, 255, 255, 1);
-	font-size: var(--nav-button-font);
-	line-height: 4vw;
-	font-variation-settings: 'wght' 600;
 	box-shadow: var(--shadow);
-	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
 	position: relative;
 	cursor: pointer;
+	user-select: none;
 }
 
 .nav-button > span {
-	 /* color: var(--accent-color); */
-	 color: #639cf6;
+	color: var(--accent-color);
+	transition: color 0.4s ease-out;
+	font-size: var(--nav-button-font);
+	line-height: 4.166666666666666vw;
+	font-variation-settings: 'wght' 720;
 }
 
 .nav-button-about {
+	border-radius: var(--border-radius) var(--border-radius) 0
+		var(--border-radius);
+	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
 	left: 8vw;
 	transform: translateX(0);
-	border-radius: var(--border-radius) var(--border-radius) 0 var(--border-radius);
+}
+
+.nav-button-about:after {
+	content: '';
+	background-image: url(../static/waves.svg);
+	position: absolute;
+	top: -1.4vw;
+	left: -1vw;
+	width: 8vw;
+	height: 2.2vw;
 }
 
 .nav-button-projects {
+	border-radius: var(--border-radius) var(--border-radius) var(--border-radius)
+		0;
+	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
 	left: 44vw;
 	transform: translateX(0);
-	border-radius: var(--border-radius) var(--border-radius) var(--border-radius) 0;
 }
 
 .nav-button-contact {
+	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
+	border-radius: var(--border-radius) var(--border-radius) 0
+		var(--border-radius);
 	left: 14vw;
 	transform: translateX(0);
-	border-radius: var(--border-radius) var(--border-radius) 0 var(--border-radius);
 }
 
 .modal {
 	position: absolute;
 	top: 0;
 	left: calc(var(--main-container-width) + var(--spacing));
-	
+
 	height: var(--main-container-height);
 	width: var(--modal-width);
 	transform: translateX(0);
 	transition: transform 0.8s ease-out;
 
 	font-size: var(--card-font-size);
-	color: var(--secondary-color);
+	color: var(--text-color);
 	padding: 0 var(--spacing);
 }
 
 .modal-header {
 	display: flex;
 	align-items: center;
-	margin-bottom: var(--spacing);
+	margin-bottom: 3.0208333333333335vw;
 }
 
 .modal-header-text {
 	font-size: var(--header-font-size);
+	font-family: 'Raleway';
 	font-variation-settings: 'wght' 375;
 	padding-right: calc(var(--spacing) / 2);
 }
@@ -136,7 +255,7 @@ nav {
 .modal-header-line {
 	flex-grow: 1;
 	background-image: url(../static/vector-repeat.svg);
-  background-size: contain;
+	background-size: contain;
 	background-repeat: repeat-x;
 	height: 1.5vw;
 	clip-path: inset(0 100% 0 0);
@@ -147,6 +266,7 @@ nav {
 	width: var(--modal-close-button-size);
 	height: var(--modal-close-button-size);
 	background-color: var(--accent-color);
+	transition: background-color 0.4s ease-out;
 	border-radius: 50%;
 	cursor: pointer;
 
@@ -159,22 +279,24 @@ nav {
 }
 
 .modal.active {
-	transform: translateX(calc(var(--modal-column-width) - var(--main-container-width)));
+	transform: translateX(
+		calc(var(--modal-column-width) - var(--main-container-width))
+	);
 }
 
 .modal-opened .nav-button-about {
-	border-radius: var(--border-radius);
 	transform: translateX(-8vw);
+	border-radius: var(--border-radius);
 }
 
 .modal-opened .nav-button-projects {
-	border-radius: var(--border-radius);
 	transform: translateX(-44vw);
+	border-radius: var(--border-radius);
 }
 
 .modal-opened .nav-button-contact {
-	border-radius: var(--border-radius);
 	transform: translateX(-14vw);
+	border-radius: var(--border-radius);
 }
 
 .modal.active .modal-header-line {
@@ -197,7 +319,12 @@ nav {
 }
 
 .modal-about-card p {
-	margin-bottom: var(--spacing);
+	margin-bottom: calc(var(--spacing) / 2);
+}
+
+.modal-about-card .link {
+	margin-top: var(--spacing);
+	display: block;
 }
 
 .modal-about-photo {
@@ -218,7 +345,7 @@ nav {
 }
 
 .modal-projects > .modal-header {
-	margin-bottom: 0;
+	margin-bottom: 1.3541666666666667vw;
 }
 
 .modal-projects-cards-container {
@@ -232,17 +359,18 @@ nav {
 
 ::-webkit-scrollbar {
 	width: 0.52vw;
-	height: 0.8vw;
+	height: 0.72vw;
 }
 
 ::-webkit-scrollbar-track {
-	box-shadow: inset 0 0 0.16vw rgba(0, 0, 0, 0.32); 
+	box-shadow: inset 0 0 0.16vw rgba(0, 0, 0, 0.32);
 	border-radius: 0.52vw;
 }
 
 ::-webkit-scrollbar-thumb {
 	border-radius: 0.52vw;
 	background-color: #c1c1c1;
+	box-shadow: inset 3px 2px rgba(255, 255, 255, 0.42);
 }
 
 .modal-projects-card {
@@ -272,7 +400,7 @@ nav {
 	font-variation-settings: 'wght' 560;
 	font-size: calc(var(--header-font-size) / 2);
 
-	margin-bottom: var(--spacing);
+	margin-bottom: calc(var(--spacing) / 2);
 }
 
 .modal-projects-card-image {
@@ -295,7 +423,7 @@ nav {
 }
 
 .modal-contact-card p {
-	margin-bottom: var(--spacing);
+	margin-bottom: calc(var(--spacing) / 2);
 }
 
 .card-contact {
@@ -307,10 +435,13 @@ nav {
 	width: 2vw;
 	margin-right: 0.8vw;
 	fill: var(--link);
+	transition: fill 0.4s ease-out;
 }
 
-a, .link {
+a,
+.link {
 	color: var(--link);
+	transition: color 0.4s ease-out;
 	font-variation-settings: 'wght' 560;
 	text-decoration: underline;
 	cursor: pointer;

@@ -31,10 +31,11 @@ scene.add(ambientLight);
  * Blob
  */
 // Geometry
-const blobGeometry = new THREE.SphereBufferGeometry(1.6, 256, 256);
+const blobGeometry = new THREE.SphereBufferGeometry(1.6, 200, 200);
 
 const textureLoader = new THREE.TextureLoader();
-const gradientTexture = textureLoader.load('gradients/test2.png');
+const chillingTexture = textureLoader.load('gradients/chilling.png');
+const hypedTexture = textureLoader.load('gradients/hyped1.png');
 
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 
@@ -48,10 +49,10 @@ const environmentMapTexture = cubeTextureLoader.load([
 ]);
 
 const blobMaterial = new THREE.MeshPhysicalMaterial({
-	map: gradientTexture,
+	map: chillingTexture,
 	envMap: environmentMapTexture,
 	roughness: 0.1,
-	metalness: 0.1,
+	metalness: 0.05,
 	transparent: true,
 	opacity: 1,
 	// clearcoat: 1,
@@ -60,7 +61,7 @@ const blobMaterial = new THREE.MeshPhysicalMaterial({
 const customUniforms = {
 	uTime: { value: 0 },
 	uSpeed: { value: 0.24 },
-	uFrequency: { value: 3.2 },
+	uFrequency: { value: 2.9 },
 	uDistort: { value: 0.1 },
 	uFixNormals: { value: true },
 };
@@ -79,7 +80,6 @@ gui
 	.name('uDistort');
 
 blobMaterial.onBeforeCompile = (shader) => {
-
 	console.log(shader);
 	shader.uniforms.uTime = customUniforms.uTime;
 	shader.uniforms.uDistort = customUniforms.uDistort;
@@ -179,9 +179,9 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.setClearColor(0xffffff, 0);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// const fog = new THREE.Fog('lightblue', 0.8, 10);
-// // renderer.setClearColor('lightblue');
-// scene.fog = fog;
+const fog = new THREE.Fog('lightblue', 0.8, 10);
+// renderer.setClearColor('lightblue');
+scene.fog = fog;
 
 /**
  * Animate
@@ -243,9 +243,48 @@ for (let button of buttons) {
 }
 
 // Horizontal Scrolling
-const scrollContainer = document.querySelector('.modal-projects-cards-container')
-scrollContainer.addEventListener('wheel', function(e) {
+const scrollContainer = document.querySelector(
+	'.modal-projects-cards-container'
+);
 
-  if (e.deltaY > 0) scrollContainer.scrollLeft += 120;
-  else scrollContainer.scrollLeft -= 120;
+scrollContainer.addEventListener('wheel', function (e) {
+	if (e.deltaY > 0) scrollContainer.scrollLeft += e.deltaY;
+	else scrollContainer.scrollLeft -= -e.deltaY;
+});
+
+const checkbox = document.getElementById('checkbox');
+const body = document.querySelector('body');
+
+let counter = 0;
+
+checkbox.addEventListener('click', () => {
+	body.classList.remove('hyped');
+
+	if (checkbox.checked == true) {
+		body.classList.add('hyped');
+		blobMaterial.map = hypedTexture;
+
+		const id = setInterval(expandFrame, 33);
+
+		function expandFrame() {
+			if (counter == 5) {
+				clearInterval(id);
+			} else {
+				counter++;
+				customUniforms.uDistort.value += 0.1;
+			}
+		}
+	} else {
+		blobMaterial.map = chillingTexture;
+
+		const id = setInterval(expandFrame, 33);
+		function expandFrame() {
+			if (counter == 0) {
+				clearInterval(id);
+			} else {
+				counter--;
+				customUniforms.uDistort.value -= 0.1;
+			}
+		}
+	}
 });
