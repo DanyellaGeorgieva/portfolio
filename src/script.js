@@ -35,7 +35,7 @@ const blobGeometry = new THREE.SphereBufferGeometry(1.6, 200, 200);
 
 const textureLoader = new THREE.TextureLoader();
 const chillingTexture = textureLoader.load('gradients/chilling.png');
-const hypedTexture = textureLoader.load('gradients/hyped1.png');
+const hypedTexture = textureLoader.load('gradients/hyped.png');
 
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 
@@ -179,10 +179,6 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.setClearColor(0xffffff, 0);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-const fog = new THREE.Fog('lightblue', 0.8, 10);
-// renderer.setClearColor('lightblue');
-scene.fog = fog;
-
 /**
  * Animate
  */
@@ -263,6 +259,7 @@ checkbox.addEventListener('click', () => {
 	if (checkbox.checked == true) {
 		body.classList.add('hyped');
 		blobMaterial.map = hypedTexture;
+		blobMaterial.clearcoat = 0.8;
 
 		const id = setInterval(expandFrame, 33);
 
