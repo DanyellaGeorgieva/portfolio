@@ -176,11 +176,29 @@ nav {
 	width: -moz-fit-content;
 	height: 4.166666666666666vw;
 	padding: 0 calc(var(--spacing) / 1.2);
-	background-color: rgba(255, 255, 255, 1);
-	box-shadow: var(--shadow);
 	position: relative;
 	cursor: url(../static/pointer.svg), auto;
 	user-select: none;
+}
+
+.nav-button-background {
+	background-color: rgba(255, 255, 255, 1);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 5;
+	top: 0;
+	left: 0;
+	box-shadow: var(--shadow);
+}
+
+.nav-button-projects .nav-button-background {
+	border-radius: var(--border-radius) var(--border-radius)  var(--border-radius) 0;
+}
+
+.nav-button-about .nav-button-background, 
+.nav-button-contact .nav-button-background {
+	border-radius: var(--border-radius) var(--border-radius) 0  var(--border-radius) ;
 }
 
 .nav-button > span {
@@ -190,23 +208,18 @@ nav {
 	line-height: 4.166666666666666vw;
 	font-variation-settings: 'wght' 720;
 	display: inline-block;
+	position: relative;
+	z-index: 10;
 }
 
 .nav-circle {
 	position: absolute;
 	width: var(--spacing);
 	height: var(--spacing);
-	border: 0.32vw solid #5EFFC1;
+	border: 0.32vw solid #5effc1;
 	border-radius: 50%;
-	transition: border 0.4s ease-out, opacity 0.8s ease-out;
-}
-
-.nav-button-about {
-	border-radius: var(--border-radius) var(--border-radius) 0
-		var(--border-radius);
-	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
-	left: 8vw;
-	transform: translateX(0);
+	transition: border 0.2s ease-out, opacity 0.4s ease-out;
+	z-index: 4;
 }
 
 .nav-waves {
@@ -216,13 +229,19 @@ nav {
 	width: 6.666666666666667vw;
 	height: var(--spacing);
 	overflow: hidden;
+	transition: opacity 0.4s ease-out;
+	z-index: 10;
+}
+
+.nav-button-projects .nav-waves {
+	left: 4vw;
 }
 
 .nav-waves:after {
 	position: absolute;
 	left: calc(var(--spacing) / -1);
 	content: '';
-	background: url(../static/nav-waves.svg) repeat repeat;
+	background: url(../static/nav-waves.svg);
 	width: 10vw;
 	height: 100%;
 }
@@ -232,16 +251,18 @@ nav {
 	animation-duration: 0.7s;
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
+	animation-delay: 0.2s;
 }
 
-.nav-button-about:hover > .nav-circle {
-	border: 0.84vw solid #5EFFC1;
+.nav-button:hover > .nav-circle {
+	border: 0.834vw solid #5effc1;
 }
 
 @keyframes waves-move {
 	from {
 		transform: translateX(0);
-	} to {
+	}
+	to {
 		transform: translateX(var(--spacing));
 	}
 }
@@ -250,6 +271,14 @@ nav {
 .nav-button-contact > .nav-circle {
 	bottom: calc(var(--spacing) / -2);
 	right: calc(var(--spacing) / -2);
+}
+
+.nav-button-about {
+	border-radius: var(--border-radius) var(--border-radius) 0
+		var(--border-radius);
+	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
+	left: 8vw;
+	transform: translateX(0);
 }
 
 .nav-button-projects {
@@ -324,7 +353,6 @@ nav {
 	justify-content: center;
 
 	margin-left: calc(var(--spacing) / 2);
-	padding: 0.2vw;
 }
 
 .modal.active {
@@ -333,22 +361,24 @@ nav {
 	);
 }
 
+.modal-opened .nav-button-background {
+	border-radius: var(--border-radius);
+}
+
 .modal-opened .nav-button-about {
 	transform: translateX(-8vw);
-	border-radius: var(--border-radius);
 }
 
 .modal-opened .nav-button-projects {
 	transform: translateX(-44vw);
-	border-radius: var(--border-radius);
 }
 
 .modal-opened .nav-button-contact {
 	transform: translateX(-14vw);
-	border-radius: var(--border-radius);
 }
 
-.modal-opened .nav-circle {
+.modal-opened .nav-circle,
+.modal-opened .nav-waves {
 	opacity: 0;
 }
 
