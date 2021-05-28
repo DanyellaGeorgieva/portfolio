@@ -234,6 +234,12 @@ for (let button of buttons) {
 	let typeOfBtn = button.getAttribute('data-type');
 
 	button.addEventListener('click', () => {
+
+		for (let button of buttons) {
+			button.classList.remove('selected');
+		}
+
+		button.classList.add('selected');
 		toggleModal(`modal-${typeOfBtn}`);
 	});
 }
@@ -251,6 +257,7 @@ scrollContainer.addEventListener('wheel', function (e) {
 const checkbox = document.getElementById('checkbox');
 const body = document.querySelector('body');
 
+// Change theme
 let counter = 0;
 
 checkbox.addEventListener('click', () => {

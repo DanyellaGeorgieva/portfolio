@@ -28,6 +28,7 @@ body {
 		#b29bc7
 	);
 	--accent-color: #3db3e9;
+	--accent-color-hover: #018fd1;
 
 	--link: #2d82aa;
 	--text-color: #242525;
@@ -64,6 +65,7 @@ body {
 
 body.hyped {
 	--accent-color: #2cffae;
+	--accent-color-hover: #01d886;
 
 	--link: #189b7a;
 }
@@ -150,6 +152,11 @@ input[type='checkbox'] {
 	transition: transform 0.2s ease-in, background-color 0.2s ease-out;
 }
 
+.switcher:hover::before {
+	transform: scale(1.1, 1.1);
+	background-color: var(--accent-color-hover);
+}
+
 input[type='checkbox']:checked + .switcher:before {
 	transform: translate(var(--spacing), 0);
 }
@@ -198,25 +205,25 @@ nav {
 
 .nav-button-about .nav-button-background, 
 .nav-button-contact .nav-button-background {
-	border-radius: var(--border-radius) var(--border-radius) 0  var(--border-radius) ;
+	border-radius: var(--border-radius) var(--border-radius) 0  var(--border-radius);
 }
 
 .nav-button > span {
 	color: var(--accent-color);
-	transition: color 0.4s ease-out;
 	font-size: var(--nav-button-font);
 	line-height: 4.166666666666666vw;
 	font-variation-settings: 'wght' 720;
 	display: inline-block;
 	position: relative;
 	z-index: 10;
+	transition: color 0.4s ease-out, transform 0.4s ease-out;
 }
 
 .nav-circle {
 	position: absolute;
 	width: var(--spacing);
 	height: var(--spacing);
-	border: 0.32vw solid #5effc1;
+	border: 0.32vw solid #f8b2fa;
 	border-radius: 50%;
 	transition: border 0.2s ease-out, opacity 0.4s ease-out;
 	z-index: 4;
@@ -241,7 +248,7 @@ nav {
 	position: absolute;
 	left: calc(var(--spacing) / -1);
 	content: '';
-	background: url(../static/nav-waves.svg);
+	background: url(../static/nav-waves-pink.svg);
 	width: 10vw;
 	height: 100%;
 }
@@ -255,7 +262,12 @@ nav {
 }
 
 .nav-button:hover > .nav-circle {
-	border: 0.834vw solid #5effc1;
+	border: 0.834vw solid #f8b2fa;
+}
+
+.nav-button:hover > span {
+	transform: scale(1.08, 1.08);
+	color: var(--accent-color-hover);
 }
 
 @keyframes waves-move {
@@ -274,16 +286,13 @@ nav {
 }
 
 .nav-button-about {
-	border-radius: var(--border-radius) var(--border-radius) 0
-		var(--border-radius);
 	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
 	left: 8vw;
 	transform: translateX(0);
 }
 
 .nav-button-projects {
-	border-radius: var(--border-radius) var(--border-radius) var(--border-radius)
-		0;
+
 	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
 	left: 44vw;
 	transform: translateX(0);
@@ -296,8 +305,6 @@ nav {
 
 .nav-button-contact {
 	transition: transform 0.8s ease-out, border-radius 0.8s ease-out;
-	border-radius: var(--border-radius) var(--border-radius) 0
-		var(--border-radius);
 	left: 14vw;
 	transform: translateX(0);
 }
@@ -344,7 +351,7 @@ nav {
 	width: var(--modal-close-button-size);
 	height: var(--modal-close-button-size);
 	background-color: var(--accent-color);
-	transition: background-color 0.4s ease-out;
+	transition: background-color 0.4s ease-out, transform 0.4s ease-out;
 	border-radius: 50%;
 	cursor: url(../static/pointer.svg), auto;
 
@@ -353,6 +360,11 @@ nav {
 	justify-content: center;
 
 	margin-left: calc(var(--spacing) / 2);
+}
+
+.modal-close-button:hover {
+	transform: scale(1.1, 1.1);
+	background-color: var(--accent-color-hover);
 }
 
 .modal.active {
@@ -384,6 +396,15 @@ nav {
 
 .modal.active .modal-header-line {
 	clip-path: inset(0 0 0 0);
+}
+
+.modal-opened .nav-button.selected  .nav-button-background {
+	border: 3px solid var(--accent-color);
+}
+
+.modal-opened .nav-button.selected > span {
+	color: var(--accent-color);
+	opacity: 0.8;
 }
 
 .modal-opened .webgl {
@@ -442,7 +463,7 @@ nav {
 
 ::-webkit-scrollbar {
 	width: 0.52vw;
-	height: 0.72vw;
+	height: 0.76vw;
 }
 
 ::-webkit-scrollbar-track {
@@ -457,6 +478,7 @@ nav {
 
 .modal-projects-card {
 	width: var(--modal-column-width);
+	height: 22.8vw;
 	background-color: white;
 	border-radius: var(--border-radius);
 
@@ -473,8 +495,22 @@ nav {
 	margin-bottom: var(--spacing);
 }
 
-.modal-projects-card-site {
+.modal-projects-card > strong {
 	text-align: center;
+	display: block;
+	width: 100%;
+
+	position: absolute;
+  left: 50%;
+  bottom: var(--spacing);
+  transform: translateX(-50%);
+}
+
+.modal-projects-card-site {
+	position: absolute;
+  left: 50%;
+  bottom: var(--spacing);
+  transform: translateX(-50%);
 }
 
 .modal-projects-card-title {
@@ -523,10 +559,15 @@ nav {
 a,
 .link {
 	color: var(--link);
-	transition: color 0.4s ease-out;
+	transition: color 0.4s ease-out, transform 0.4s ease-out;
 	font-variation-settings: 'wght' 650;
 	text-decoration: none;
 	cursor: url(../static/pointer.svg), auto;
+	display: block;
+}
+
+.link:hover {
+	transform: scale(1.08, 1.08);
 }
 
 p::selection,
