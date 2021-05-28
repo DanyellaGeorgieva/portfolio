@@ -52,6 +52,10 @@ body {
 	box-sizing: border-box;
 }
 
+.garet {
+	color: blue;
+}
+
 html,
 body {
 	overflow: hidden;
