@@ -1255,3 +1255,15 @@ input[type='range']::-webkit-slider-thumb {
 		font-variation-settings: 'ital' 0, 'wght' 762.96;
 	}
 }
+
+
+@media (max-width: 786px) {
+	
+	.main-container {
+		display: none;
+	}
+
+
+
+
+}

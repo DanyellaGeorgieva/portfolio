@@ -138,6 +138,11 @@ const camera = new THREE.PerspectiveCamera(
 	100
 );
 
+if(sizes.width < 786 ) {
+	camera.fov = 90;
+	camera.updateProjectionMatrix();
+}
+
 camera.position.set(0, 0, 3.6);
 camera.lookAt(scene.position);
 
