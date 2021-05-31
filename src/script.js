@@ -138,7 +138,7 @@ const camera = new THREE.PerspectiveCamera(
 	100
 );
 
-if(sizes.width < 786 ) {
+if (sizes.width < 786) {
 	camera.fov = 90;
 	camera.updateProjectionMatrix();
 }
@@ -212,7 +212,6 @@ for (let button of buttons) {
 	let typeOfBtn = button.getAttribute('data-type');
 
 	button.addEventListener('click', () => {
-
 		for (let button of buttons) {
 			button.classList.remove('selected');
 		}
