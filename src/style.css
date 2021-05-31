@@ -1257,12 +1257,34 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 
+.cs-container {
+	display: none;
+}
+
 @media (max-width: 786px) {
 	
 	.main-container {
 		display: none;
 	}
 
+	.theme-switcher-container {
+		transform: translate(-50%, 40px) scale(4);
+	}
+
+	.cs-container {
+		display: block;
+		position: fixed;
+		bottom: 40px; 
+		width: 90%;
+		border-radius: var(--border-radius);
+		background-color: #fff;
+		box-shadow: var(--shadow);
+		padding: var(--spacing);
+		color: #000000;
+		font-size: 24px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
 
 
 
