@@ -1,8 +1,6 @@
 import './style.css';
 import * as THREE from 'three';
 import { ShaderChunk } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import * as dat from 'dat.gui';
 
 import displacement from './shaders/displacement.glsl';
 import headers from './shaders/headers.glsl';
@@ -12,9 +10,6 @@ import { toggleModal } from './modal';
 /**
  * Base
  */
-// Debug
-const gui = new dat.GUI({ width: 340 });
-
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
 
@@ -55,7 +50,6 @@ const blobMaterial = new THREE.MeshPhysicalMaterial({
 	metalness: 0.05,
 	transparent: true,
 	opacity: 1,
-	// clearcoat: 1,
 });
 
 const customUniforms = {
@@ -66,21 +60,7 @@ const customUniforms = {
 	uFixNormals: { value: true },
 };
 
-gui
-	.add(customUniforms.uFrequency, 'value')
-	.min(0)
-	.max(10)
-	.step(1)
-	.name('uFrequency');
-gui
-	.add(customUniforms.uDistort, 'value')
-	.min(0)
-	.max(1)
-	.step(0.001)
-	.name('uDistort');
-
 blobMaterial.onBeforeCompile = (shader) => {
-	console.log(shader);
 	shader.uniforms.uTime = customUniforms.uTime;
 	shader.uniforms.uDistort = customUniforms.uDistort;
 	shader.uniforms.uFrequency = customUniforms.uFrequency;
@@ -163,10 +143,6 @@ camera.lookAt(scene.position);
 
 scene.add(camera);
 
-// Controls
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true;
-
 /**
  * Renderer
  */
@@ -211,9 +187,6 @@ const tick = () => {
 	// Update the blob to follow the mouse
 	blob.rotation.x = -Math.sin(mouse.y) * Math.PI * 0.1 - 1;
 	blob.rotation.y = Math.sin(mouse.x) * Math.PI * 0.1 - 1;
-
-	// Update controls
-	controls.update();
 
 	// Update shader material
 	customUniforms.uTime.value = elapsedTime;
