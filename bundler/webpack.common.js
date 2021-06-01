@@ -65,6 +65,19 @@ module.exports = {
 				],
 			},
 
+			// Docs 
+			{
+				test: /\.(pdf|doc)$/,
+				use: [
+					{
+						loader: 'file-loader',
+						options: {
+							outputPath: 'assets/docs/',
+						},
+					},
+				],
+			},
+
 			// Fonts
 			{
 				test: /\.(ttf|eot|woff|woff2)$/,
