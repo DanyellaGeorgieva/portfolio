@@ -28,12 +28,24 @@ scene.add(ambientLight);
 // Geometry
 const blobGeometry = new THREE.SphereBufferGeometry(1.6, 200, 200);
 
-const textureLoader = new THREE.TextureLoader();
+const loadingManager = new THREE.LoadingManager();
+
+const loadingBarElement = document.querySelector('.loader-fill')
+
+loadingManager.onProgress = (itemUrl, itemsLoaded, itemsTotal) => {
+	console.log('loading progressing');
+
+	const progressRatio = itemsLoaded / itemsTotal;
+	loadingBarElement.style.transform = `scaleX(${progressRatio})`
+
+};
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
+
 const chillingTexture = textureLoader.load('gradients/chilling.png');
 const hypedTexture = textureLoader.load('gradients/hyped.png');
 
-const cubeTextureLoader = new THREE.CubeTextureLoader();
-
+const cubeTextureLoader = new THREE.CubeTextureLoader(loadingManager);
 const environmentMapTexture = cubeTextureLoader.load([
 	'/environmentMaps/0/px.jpg',
 	'/environmentMaps/0/nx.jpg',

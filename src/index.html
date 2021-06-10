@@ -8,13 +8,13 @@
 	<body>
 		<div class="background background-chill"></div>
 		<div class="background background-hyped"></div>
-		<div class="loading-holder"></div>
 		<canvas class="webgl"></canvas>
+		<div class="loader"><div class="loader-fill"></div></div>
 		<div class="theme-switcher-container">
 			<div class="chill">chilling</div>
 			<label class="switch">
 				<input type="checkbox" id="checkbox">
-				<span class="switcher"></span>
+				<div class="switcher"></div>
 	 		</label>
 			<div class="hyped">hyped</div>
 		</div>
@@ -25,22 +25,19 @@
 			<nav>
 				<div class="cursor-lamp"></div>
 				<div class="nav-button nav-button-about" data-type="about">
-					<div class="nav-waves"></div>
-					<div class="nav-circle"></div>
-					<div class="nav-button-background"></div>
-					<span>about</span>
+						<span class="about-anim">a</span>
+						<span class="about-anim">b</span>
+						<span>out</span>
 				</div>
 				<div class="nav-button nav-button-projects" data-type="projects">
-					<div class="nav-waves"></div>
-					<div class="nav-circle"></div>
-					<div class="nav-button-background"></div>
-					<span>work</span>
+					<span>w</span>
+					<span>o</span>
+					<span>r</span>
+					<span>k</span>
 				</div>
 				<div class="nav-button nav-button-contact" data-type="contact">
-					<div class="nav-waves"></div>
-					<div class="nav-circle"></div>
-					<div class="nav-button-background"></div>
-					<span>contact</span>
+					<span>con</span>
+					<span class="contact-anim">tact</span>
 				</div>
 			</nav>
 				<div class="modal modal-about">
@@ -51,7 +48,7 @@
 							<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<rect x="34.6055" y="30.3594" width="6" height="24" rx="2" transform="rotate(135 34.6055 30.3594)" fill="white"/>
 								<rect x="17.6367" y="34.6055" width="6" height="24" rx="2" transform="rotate(-135 17.6367 34.6055)" fill="white"/>
-								</svg>
+							</svg>
 						</div>
 					</div>
 					<div class="modal-about-card">
@@ -138,6 +135,5 @@
 					</div>
 				</div>
 			</div>
-		</div>
 	</body>
 </html>
