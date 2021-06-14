@@ -33,11 +33,8 @@ const loadingManager = new THREE.LoadingManager();
 const loadingBarElement = document.querySelector('.loader-fill')
 
 loadingManager.onProgress = (itemUrl, itemsLoaded, itemsTotal) => {
-	console.log('loading progressing');
-
 	const progressRatio = itemsLoaded / itemsTotal;
 	loadingBarElement.style.transform = `scaleX(${progressRatio})`
-
 };
 
 const textureLoader = new THREE.TextureLoader(loadingManager);
