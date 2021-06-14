@@ -103,29 +103,20 @@ body {
 }
 
 .loader {
-	/* position: absolute;
+	position: absolute;
 	top: 50%;
 	left: 50%;
 	width: 6.666666666666667vw;
 	height: var(--spacing);
 	margin: -1vw 0 0 -3.33vw;
-	overflow: hidden; */
+	transform: scaleX(0);
+	transform-origin: left;
 }
 
 .loader-fill {
-	/* height: 100%;
-	width: 160%;
-	margin: 0 -3vw;
-	transform: scaleX(0);
-	transform-origin: left;
-	background-image: url(../static/waves.svg);
-	background-size: contain;
-	background-repeat: repeat-x;
-	animation-name: waves-move-right;
-	animation-duration: 0.7s;
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
-	animation-delay: 0.2s; */
+	height: 100%;
+	width: 100%;
+	background: rgba(255, 255, 255, 0.6);
 }
 
 .webgl {
@@ -404,7 +395,7 @@ nav {
 
 .modal-header-line {
 	flex-grow: 1;
-	/* background-image: url(../static/waves.svg); */
+	background-image: url(../static/waves.svg);
 	background-size: contain;
 	background-repeat: repeat-x;
 	height: 1.5vw;
@@ -709,6 +700,10 @@ body.garet {
 .garet-description {
 	margin-bottom: var(--spacing);
 	line-height: 2vw;
+}
+
+.garet-description a.link {
+	color: black;
 }
 
 .anim1-container,
@@ -1309,34 +1304,49 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 @media (max-width: 786px) {
-	.main-container {
+
+	/* display nones */
+	.cursor-lamp {
 		display: none;
+	}
+
+
+	body {
+		--nav-button-font: 32px;
+		--main-container-height: 100vh;
+		--main-container-width: 100vw;
+	}
+
+	.main-container {
+		margin: 0 auto;;
+	}
+
+	nav {
+		position: relative;
+		height: 60vh;
+		top: 20vh;
+	}
+
+	.nav-button {
+		width: unset;
+		left: unset; right: unset; top: unset; bottom: unset;
+		transform: unset;
+		text-align: center;
+		line-height: 56px;
+		vertical-align: middle;
+	}
+
+	.nav-button > span {
+		vertical-align: middle;
+	}
+
+	.contact-anim {
+		width: unset;
 	}
 
 	.theme-switcher-container {
 		transform: translate(-50%, 40px) scale(4);
+		z-index: 1000;
 	}
 
-	.cs-container {
-		display: block;
-		position: fixed;
-		bottom: 40px;
-		width: 90%;
-		border-radius: var(--border-radius);
-		background-color: #fff;
-		box-shadow: var(--shadow);
-		padding: var(--spacing);
-		color: #000000;
-		font-size: 24px;
-		left: 50%;
-		transform: translateX(-50%);
-	}
-
-	/* .loading-holder {
-		width: 90vw;
-		height: 90vw;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-	} */
 }

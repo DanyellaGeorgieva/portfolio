@@ -30,11 +30,17 @@ const blobGeometry = new THREE.SphereBufferGeometry(1.6, 200, 200);
 
 const loadingManager = new THREE.LoadingManager();
 
-const loadingBarElement = document.querySelector('.loader-fill')
+const loadingBarElement = document.querySelector('.loader');
 
 loadingManager.onProgress = (itemUrl, itemsLoaded, itemsTotal) => {
+	console.log('loading progressing');
+
 	const progressRatio = itemsLoaded / itemsTotal;
-	loadingBarElement.style.transform = `scaleX(${progressRatio})`
+	loadingBarElement.style.transform = `scaleX(${progressRatio})`;
+
+	if (progressRatio == 1) {
+		loadingBarElement.style.display = 'none';
+	}
 };
 
 const textureLoader = new THREE.TextureLoader(loadingManager);
